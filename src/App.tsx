@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import { Video } from "src/Video"
 
-function App() {
+export const App = () => {
+  const [videoStream, setVideoStream] = useState<MediaStream | undefined>(undefined)
+
+  // navigator.mediaDevices.enumerateDevices()
+  //   .then(res => console.log("*** enumerate devices", res.map(x => ({ kind: x.kind, label: x.label }))))
+  //   .catch(err => console.log("*** failed enumerate devices", err))
+
+
+  //TODO: Checkout https://github.com/jitsi/lib-jitsi-meet.git for stream connection to server...
+
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+      .then(res => {
+        console.log("*** get user media", res)
+        setVideoStream(res)
+      })
+      .catch(err => console.log("*** failed to get user media", err))
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header>
+        Here comes video from own device!
       </header>
-    </div>
-  );
-}
 
-export default App;
+      <Video videoStream={videoStream} />
+      
+      <footer>
+        ABOVE HERE!
+      </footer>
+    </div>
+  )
+}
